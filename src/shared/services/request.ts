@@ -3,7 +3,7 @@ import { getToken } from './auth';
 import { IServerResponse } from '../interfaces/server-response.interface';
 
 const instance = axios.default.create({
-  baseURL: 'http://95.217.238.75:4000/api/'
+  baseURL: 'http://localhost:4000/api/'
 });  
 
 const getHeaders = (): axios.AxiosRequestConfig => {

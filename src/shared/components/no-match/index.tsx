@@ -6,7 +6,7 @@ export const NoMatch = () => {
   return (
     <Container fixed>
       <h1>Страница не найдена</h1>
-      <Link to="/home">Домой</Link>
+      <Link to="/home/table">Домой</Link>
     </Container>
   );
 };

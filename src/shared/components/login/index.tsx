@@ -8,12 +8,11 @@ import { IStore } from '../../../redux/interfaces/store/store';
 import { useHistory } from 'react-router-dom';
 import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
-import PlusOneIcon from '@material-ui/icons/PlusOne';
 import { Grid } from '@material-ui/core';
 
 export const Login = () => {
   const initialValues: ILogin = {
-    email: '',
+    userName: '',
     password: ''
   };
   const dispatch = useDispatch();
@@ -23,14 +22,10 @@ export const Login = () => {
   }));
 
   if (isLoggedIn) {
-    if (history.length > 2) {
-      history.goBack();
-    } else {
-      history.push('/home');
-    }
+    history.push('/home');
   }
 
-  const toRegister = () => history.push('/register');
+  // const toRegister = () => history.push('/register');
   const toHomePage = () => history.push('/home');
 
   const handleSubmit = (formData: ILogin) => {
@@ -53,7 +48,7 @@ export const Login = () => {
         <form onSubmit={formik.handleSubmit}>
           <List>
             <ListItem>
-              <TextField key="email" placeholder="Почта" type="email" name="email" value={formik.values.email} onChange={formik.handleChange} required/>
+              <TextField key="userName" placeholder="Имя пользователя" type="text" name="userName" value={formik.values.userName} onChange={formik.handleChange} required/>
             </ListItem>
             <ListItem>
               <TextField key="password" placeholder="Пароль" type="password" name="password" value={formik.values.password} onChange={formik.handleChange} required/>
@@ -71,11 +66,11 @@ export const Login = () => {
                     <HomeRoundedIcon />
                   </Button >
                 </Tooltip>
-                <Tooltip title="К регистрации">
+                {/* <Tooltip title="К регистрации">
                   <Button aria-label="Регистрация" type="button" onClick={() => toRegister()}>
                     <PlusOneIcon />
                   </Button >
-                </Tooltip>
+                </Tooltip> */}
               </ButtonGroup>
             </Grid>
           </ListItem>

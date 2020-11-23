@@ -21,23 +21,23 @@ export const login = (data: ILogin) => async (dispatch: Dispatch) => {
     });
   }
 
-  let isAdmin = false;
+  let isAdmin = true;
 
-  if (loginResult.isLoggedIn) {
-    const adminCheckResult = await checkAdminRequest();
+  // if (loginResult.isLoggedIn) {
+  //   const adminCheckResult = await checkAdminRequest();
 
-    if (adminCheckResult.isError) {
-      dispatch({
-        type: ActionTypes.DATA_FETCH_SET_MESSAGE,
-        payload: {
-          isError: true,
-          message: adminCheckResult.error?.message
-        }
-      });
-    }
+  //   if (adminCheckResult.isError) {
+  //     dispatch({
+  //       type: ActionTypes.DATA_FETCH_SET_MESSAGE,
+  //       payload: {
+  //         isError: true,
+  //         message: adminCheckResult.error?.message
+  //       }
+  //     });
+  //   }
 
-    isAdmin = adminCheckResult.isAdmin;
-  }
+  //   isAdmin = adminCheckResult.isAdmin;
+  // }
 
   dispatch({
     type: ActionTypes.AUTH_LOG_IN,
@@ -119,23 +119,23 @@ export const checkLogin = () => async (dispatch: Dispatch) => {
       type: ActionTypes.DATA_FETCH_LOADING_START
     });
     
-    const adminCheckResult = await checkAdminRequest();
+    // const adminCheckResult = await checkAdminRequest();
 
-    if (adminCheckResult.isError) {
-      dispatch({
-        type: ActionTypes.DATA_FETCH_SET_MESSAGE,
-        payload: {
-          isError: true,
-          message: adminCheckResult.error?.message
-        }
-      });
-    }
+    // if (adminCheckResult.isError) {
+    //   dispatch({
+    //     type: ActionTypes.DATA_FETCH_SET_MESSAGE,
+    //     payload: {
+    //       isError: true,
+    //       message: adminCheckResult.error?.message
+    //     }
+    //   });
+    // }
 
     dispatch({
       type: ActionTypes.AUTH_CHECK_LOGIN,
       payload: {
         isLoggedIn: true,
-        isAdmin: adminCheckResult.isAdmin,
+        isAdmin: true,
         isCheckCompleted: true
       }
     });
