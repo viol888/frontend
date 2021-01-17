@@ -5,7 +5,7 @@ import { IStore } from '../../../redux/interfaces/store/store';
 import { IInfo } from '../../../shared/interfaces/models/info.interface';
 import { addCrudData, deleteCrudData, getCrudData, updateCrudData } from '../../../redux/actions/crud.actions';
 import { IContact } from '../../../shared/interfaces/models/contact.interface';
-import moment from 'moment';
+// import moment from 'moment';
 import ruLocale from 'date-fns/locale/ru';
 // import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 // import DateFnsUtils from '@date-io/date-fns';
