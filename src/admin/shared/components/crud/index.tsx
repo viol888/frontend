@@ -31,19 +31,22 @@ export const CrudComponent = <T extends IBaseModel>(props: ICrudProps<T>) => {
       title={collectionName}
       columns={columns}
       data={data}
+      options={{
+        filtering: true
+      }}
       editable={{
         onRowAdd: canAdd ? newData => new Promise(resolve => {
-          resolve();
+          resolve({});
           dispatch(addCrudData(collectionName, newData));
         }): undefined,
         onRowUpdate: canUpdate ? (newData, oldData) => new Promise(resolve => {
-          resolve();
+          resolve({});
           if (oldData) {
             dispatch(updateCrudData(collectionName, newData));
           }
         }): undefined,
         onRowDelete: canDelete ? oldData => new Promise(resolve => {
-          resolve();
+          resolve({});
           dispatch(deleteCrudData(collectionName, oldData.id));
         }): undefined
       }}

@@ -7,9 +7,11 @@ import { addCrudData, deleteCrudData, getCrudData, updateCrudData } from '../../
 import { IContact } from '../../../shared/interfaces/models/contact.interface';
 import moment from 'moment';
 import ruLocale from 'date-fns/locale/ru';
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+// import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+// import DateFnsUtils from '@date-io/date-fns';
 import { IWorker } from '../../../shared/interfaces/models/worker.interface';
+import InputMask from 'react-input-mask';
+import MaterialInput from '@material-ui/core/Input';
 
 const localizationSetup: Localization = {
   header: {
@@ -28,7 +30,11 @@ const localizationSetup: Localization = {
       cancelTooltip: 'Отменить',
       deleteText: 'Удалить запись?'
     },
-    dateTimePickerLocalization: ruLocale
+    dateTimePickerLocalization: ruLocale,
+    filterRow: {
+      filterPlaceHolder: 'Фильтр',
+      filterTooltip: 'Фильтр'
+    }
   },
   pagination: {
     labelDisplayedRows: '{from}-{to} из {count}',
@@ -59,7 +65,10 @@ const ContactStaticTable = (props: { infoId: string, defaultData: IContact[] }) 
           <th>ФИО</th>
           <th>Дата рождения</th>
         </tr>
-        {(data || defaultData)?.map((contact, key) => <tr key={key}><td>{contact.fio}</td><td>{moment(contact.birthDay).format('DD/MM/YYYY')}</td></tr>)}
+          {(data || defaultData)?.map((contact, key) => <tr key={key}><td>{contact.fio}</td><td>
+            {/* {moment(contact.birthDay).format('DD.MM.YYYY')} */}
+            {contact.birthDay}
+          </td></tr>)}
       </tbody>
     </table>
   );
@@ -79,20 +88,29 @@ const ContactsTable = (props: { infoId: string, data: IContact[] }) => {
     {
       title: 'Дата рождения',
       field: 'birthDay',
-      type: 'date',
-      render: rowData => <div>{moment(rowData.birthDay).format('DD/MM/YYYY')}</div>,
-      editComponent: props => 
-        <div>
-          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale} >
-            <DatePicker
-              value={props.rowData.birthDay || null}
-              okLabel={'Ок'}
-              cancelLabel={'Отмена'}
-              format={'dd/MM/yyyy'}
-              onChange={(date) => props.onChange(date)}
-            />
-          </MuiPickersUtilsProvider>
-        </div>
+      type: 'string',
+      editComponent: props =>
+        <InputMask
+          mask="99.99.9999"
+          value={props.rowData.birthDay}
+          onChange={e => props.onChange(e.target.value)}
+        >
+          {(inputProps: any) => <MaterialInput {...inputProps} type='text' />}
+        </InputMask>
+      // type: 'date',
+      // render: rowData => <div>{moment(rowData.birthDay).format('DD.MM.YYYY')}</div>,
+      // editComponent: props => 
+      //   <div>
+      //     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale} >
+      //       <DatePicker
+      //         value={props.rowData.birthDay || null}
+      //         okLabel={'Ок'}
+      //         cancelLabel={'Отмена'}
+      //         format={'dd.MM.yyyy'}
+      //         onChange={(date) => props.onChange(date)}
+      //       />
+      //     </MuiPickersUtilsProvider>
+      //   </div>
     }
   ];
 
@@ -105,18 +123,18 @@ const ContactsTable = (props: { infoId: string, data: IContact[] }) => {
       data={data || props.data}
       editable={{
         onRowAdd: newData => new Promise(resolve => {
-          resolve();
+          resolve({});
           newData.info = infoId;
           dispatch(addCrudData(collectionName, newData));
         }),
         onRowUpdate: (newData, oldData) => new Promise(resolve => {
-          resolve();
+          resolve({});
           if (oldData) {
             dispatch(updateCrudData(collectionName, newData));
           }
         }),
         onRowDelete: oldData => new Promise(resolve => {
-          resolve();
+          resolve({});
           dispatch(deleteCrudData(collectionName, oldData.id));
         })
       }}
@@ -140,38 +158,56 @@ export const Table = () => {
     { 
       title: 'Начало пребывания',
       field: 'stayDateStart',
-      type: 'date',
-      render: rowData => <div>{moment(rowData.stayDateStart).format('DD/MM/YYYY')}</div>,
-      editComponent: props => 
-        <div>
-          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale} >
-            <DatePicker
-              value={props.rowData.stayDateStart || null}
-              okLabel={'Ок'}
-              cancelLabel={'Отмена'}
-              format={'dd/MM/yyyy'}
-              onChange={(date) => props.onChange(date)}
-            />
-          </MuiPickersUtilsProvider>
-        </div>
+      type: 'string',
+      editComponent: props =>
+        <InputMask
+          mask="99.99.9999"
+          value={props.rowData.stayDateStart}
+          onChange={e => props.onChange(e.target.value)}
+        >
+          {(inputProps: any) => <MaterialInput {...inputProps} type='text' />}
+        </InputMask>
+      // type: 'date',
+      // render: rowData => <div>{moment(rowData.stayDateStart).format('DD.MM.YYYY')}</div>,
+      // editComponent: props => 
+      //   <div>
+      //     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale} >
+      //       <DatePicker
+      //         value={props.rowData.stayDateStart || null}
+      //         okLabel={'Ок'}
+      //         cancelLabel={'Отмена'}
+      //         format={'dd.MM.yyyy'}
+      //         onChange={(date) => props.onChange(date)}
+      //       />
+      //     </MuiPickersUtilsProvider>
+      //   </div>
     },
     {
       title: 'Конец пребывания',
       field: 'stayDateEnd',
-      type: 'date',
-      render: rowData => <div>{moment(rowData.stayDateEnd).format('DD/MM/YYYY')}</div>,
-      editComponent: props => 
-        <div>
-          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale} >
-            <DatePicker
-              value={props.rowData.stayDateEnd || null}
-              okLabel={'Ок'}
-              cancelLabel={'Отмена'}
-              format={'dd/MM/yyyy'}
-              onChange={(date) => props.onChange(date)}
-            />
-          </MuiPickersUtilsProvider>
-        </div>
+      type: 'string',
+      editComponent: props =>
+        <InputMask
+          mask="99.99.9999"
+          value={props.rowData.stayDateEnd}
+          onChange={e => props.onChange(e.target.value)}
+        >
+          {(inputProps: any) => <MaterialInput {...inputProps} type='text' />}
+        </InputMask>
+      // type: 'date',
+      // render: rowData => <div>{moment(rowData.stayDateEnd).format('DD.MM.YYYY')}</div>,
+      // editComponent: props => 
+      //   <div>
+      //     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale} >
+      //       <DatePicker
+      //         value={props.rowData.stayDateEnd || null}
+      //         okLabel={'Ок'}
+      //         cancelLabel={'Отмена'}
+      //         format={'dd.MM.yyyy'}
+      //         onChange={(date) => props.onChange(date)}
+      //       />
+      //     </MuiPickersUtilsProvider>
+      //   </div>
     },
     { title: 'Отделение', field: 'department' },
     { 
@@ -185,25 +221,25 @@ export const Table = () => {
   return (
     <MaterialTable
       localization={localizationSetup}
-      options={{search: false, paginationType: 'normal'}}
+      options={{search: true, filtering: true, paginationType: 'normal'}}
       title={'Список пациентов стационара с положительным результатом ПЦР на коронавирусную инфекцию за 2020 год'}
       columns={columns}
       data={data}
       editable={{
         onRowAdd: newData => new Promise(resolve => {
-          resolve();
+          resolve({});
           delete newData.contactList;
           dispatch(addCrudData(collectionName, newData));
         }),
         onRowUpdate: (newData, oldData) => new Promise(resolve => {
-          resolve();
+          resolve({});
           if (oldData) {
             delete newData.contactList;
             dispatch(updateCrudData(collectionName, newData));
           }
         }),
         onRowDelete: oldData => new Promise(resolve => {
-          resolve();
+          resolve({});
           dispatch(deleteCrudData(collectionName, oldData.id));
         })
       }}
@@ -228,42 +264,51 @@ export const WorkersTable = () => {
     { 
       title: 'Дата получения положительного результата',
       field: 'positiveResultDate',
-      type: 'date',
-      render: rowData => <div>{moment(rowData.positiveResultDate).format('DD/MM/YYYY')}</div>,
-      editComponent: props => 
-        <div>
-          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale} >
-            <DatePicker
-              value={props.rowData.positiveResultDate || null}
-              okLabel={'Ок'}
-              cancelLabel={'Отмена'}
-              format={'dd/MM/yyyy'}
-              onChange={(date) => props.onChange(date)}
-            />
-          </MuiPickersUtilsProvider>
-        </div>
+      type: 'string',
+      editComponent: props =>
+        <InputMask
+          mask="99.99.9999"
+          value={props.rowData.positiveResultDate}
+          onChange={e => props.onChange(e.target.value)}
+        >
+          {(inputProps: any) => <MaterialInput {...inputProps} type='text' />}
+        </InputMask>
+      // type: 'date',
+      // render: rowData => <div>{moment(rowData.positiveResultDate).format('DD.MM.YYYY')}</div>,
+      // editComponent: props => 
+      //   <div>
+      //     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale} >
+      //       <DatePicker
+      //         value={props.rowData.positiveResultDate || null}
+      //         okLabel={'Ок'}
+      //         cancelLabel={'Отмена'}
+      //         format={'dd.MM.yyyy'}
+      //         onChange={(date) => props.onChange(date)}
+      //       />
+      //     </MuiPickersUtilsProvider>
+      //   </div>
     }
   ];
   return (
     <MaterialTable
       localization={localizationSetup}
-      options={{search: false, paginationType: 'normal'}}
+      options={{search: true, filtering: true, paginationType: 'normal'}}
       title={'Список сотрудников с COVID-19'}
       columns={columns}
       data={data}
       editable={{
         onRowAdd: newData => new Promise(resolve => {
-          resolve();
+          resolve({});
           dispatch(addCrudData(collectionName, newData));
         }),
         onRowUpdate: (newData, oldData) => new Promise(resolve => {
-          resolve();
+          resolve({});
           if (oldData) {
             dispatch(updateCrudData(collectionName, newData));
           }
         }),
         onRowDelete: oldData => new Promise(resolve => {
-          resolve();
+          resolve({});
           dispatch(deleteCrudData(collectionName, oldData.id));
         })
       }}
