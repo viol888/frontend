@@ -5,7 +5,7 @@ import { IStore } from '../../../redux/interfaces/store/store';
 import { IInfo } from '../../../shared/interfaces/models/info.interface';
 import { addCrudData, deleteCrudData, getCrudData, updateCrudData } from '../../../redux/actions/crud.actions';
 import { IContact } from '../../../shared/interfaces/models/contact.interface';
-// import moment from 'moment';
+import moment from 'moment';
 import ruLocale from 'date-fns/locale/ru';
 // import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 // import DateFnsUtils from '@date-io/date-fns';
@@ -49,6 +49,24 @@ const localizationSetup: Localization = {
     lastAriaLabel: 'Последняя страница',
     lastTooltip: 'Последняя страница'
   },
+};
+
+const tableDateSort = (a: IInfo, b: IInfo, isStart = true) => {
+  const first = (isStart ? a.stayDateStart : a.stayDateEnd).split('.').map(i => Number(i));
+  const second = (isStart ? b.stayDateStart : b.stayDateEnd).split('.').map(i => Number(i));
+  const firstMoment = moment().set('date', first[0]).set('month', first[1] - 1).set('year', first[2]);
+  const secondMoment = moment().set('date', second[0]).set('month', second[1] - 1).set('year', second[2]);
+  const diff = firstMoment.diff(secondMoment, 'seconds');
+  return diff;
+};
+
+const workerDateSort = (a: IWorker, b: IWorker) => {
+  const first = a.positiveResultDate.split('.').map(i => Number(i));
+  const second = b.positiveResultDate.split('.').map(i => Number(i));
+  const firstMoment = moment().set('date', first[0]).set('month', first[1] - 1).set('year', first[2]);
+  const secondMoment = moment().set('date', second[0]).set('month', second[1] - 1).set('year', second[2]);
+  const diff = firstMoment.diff(secondMoment, 'seconds');
+  return diff;
 };
 
 const ContactStaticTable = (props: { infoId: string, defaultData: IContact[] }) => {
@@ -159,6 +177,7 @@ export const Table = () => {
       title: 'Начало пребывания',
       field: 'stayDateStart',
       type: 'string',
+      customSort: (a, b) => tableDateSort(a, b, true),
       editComponent: props =>
         <InputMask
           mask="99.99.9999"
@@ -186,6 +205,7 @@ export const Table = () => {
       title: 'Конец пребывания',
       field: 'stayDateEnd',
       type: 'string',
+      customSort: (a, b) => tableDateSort(a, b, false),
       editComponent: props =>
         <InputMask
           mask="99.99.9999"
@@ -220,6 +240,17 @@ export const Table = () => {
   ];
   return (
     <MaterialTable
+      actions={[
+        {
+          icon: 'add',
+          tooltip: 'Add User',
+          isFreeAction: true,
+          onClick: (event) => {
+            console.log(event);
+            alert("You want to add a new row")
+          }
+        }
+      ]}
       localization={localizationSetup}
       options={{search: true, filtering: true, paginationType: 'normal'}}
       title={'Список пациентов стационара с положительным результатом ПЦР на коронавирусную инфекцию за 2020 год'}
@@ -265,6 +296,7 @@ export const WorkersTable = () => {
       title: 'Дата получения положительного результата',
       field: 'positiveResultDate',
       type: 'string',
+      customSort: workerDateSort,
       editComponent: props =>
         <InputMask
           mask="99.99.9999"
